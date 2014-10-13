@@ -8,6 +8,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
@@ -28,6 +29,7 @@ public class MainActivity extends Activity implements OnClickListener,
 	private Speed speed;
 	TextView Speed_value;
 
+	
 	@Override
 	public final void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -73,7 +75,7 @@ public class MainActivity extends Activity implements OnClickListener,
 		X_corr.setText("X axis" + "\t\t" + rawAcceleration[0]);
 		Y_corr.setText("Y axis" + "\t\t" + rawAcceleration[1]);
 		Z_corr.setText("Z axis" + "\t\t" + rawAcceleration[2]);
-
+		
 		long tS = event.timestamp;
 		speed = new Speed(rawAcceleration[0], rawAcceleration[1], rawAcceleration[2], tS);
 		
