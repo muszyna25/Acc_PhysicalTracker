@@ -1,7 +1,6 @@
 package com.example.accphysicaltracker;
 
 import java.text.DecimalFormat;
-
 import android.app.Activity;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -29,6 +28,10 @@ public class MainActivity extends Activity implements OnClickListener,
 	private Speed speed;
 	TextView Speed_value;
 
+	long now = 0;
+	long time = 0;
+	int temp = 0;
+	private static final double nbElements = 100;
 	
 	@Override
 	public final void onCreate(Bundle savedInstanceState) {
@@ -78,6 +81,22 @@ public class MainActivity extends Activity implements OnClickListener,
 		
 		long tS = event.timestamp;
 		speed = new Speed(rawAcceleration[0], rawAcceleration[1], rawAcceleration[2], tS);
+		
+		if (now != 0) {
+			temp++;
+			
+			if (temp == nbElements) {
+				time = tS - now;
+				//setSpeed(calculateSpeed(x, y, z, time));
+				temp = 0;
+			}
+		}
+		// To set up now on the first event and do not change it while we do
+		// not have "nbElements" events
+		if (temp == 0) {
+			now = tS;
+		}
+		
 		
 		Speed_value.setText("Speed" + "\t\t" + speed.getSpeed());
 	}

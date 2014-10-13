@@ -40,7 +40,7 @@ public class Speed {
 		
 		if (now != 0) {
 			temp++;
-			Log.d("TESTING...", "TESITNG..." + "HUJ1");
+			Log.d("TESTING...", "TESITNG..." + "1");
 			if (temp == nbElements) {
 				time = tS - now;
 				setSpeed(calculateSpeed(x, y, z, time));
