@@ -33,6 +33,22 @@
             android:name=".Calculations"
             android:label="@string/title_activity_calculations" >
         </activity>
+        <activity
+            android:name=".Calculation"
+            android:label="@string/title_activity_calculation" >
+        </activity>
+        <activity
+            android:name=".About"
+            android:label="@string/title_activity_about" >
+        </activity>
+        <activity
+            android:name=".Register"
+            android:label="@string/title_activity_register" >
+        </activity>
+        <activity
+            android:name=".Results"
+            android:label="@string/title_activity_results" >
+        </activity>
     </application>
 
 </manifest>
