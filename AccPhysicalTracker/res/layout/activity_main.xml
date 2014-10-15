@@ -52,5 +52,19 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/zcoor"
         android:textSize="20dp" />
+      
+      <TextView
+        android:id="@+id/real_dist"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/real_speed"
+        android:textSize="20dp" />
+      
+      <TextView
+        android:id="@+id/calories"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/real_dist"
+        android:textSize="20dp" />
     
 </RelativeLayout>

@@ -1,64 +1,105 @@
 package com.example.accphysicaltracker;
 
-import android.hardware.SensorEvent;
 import android.util.Log;
 
 public class Speed {
 
-	private long lastUpdate = 0;
-	private float Speed = 0;
-	long now = 0;
-	long time = 0;
-	int temp = 0;
-	private static final double nbElements = 100;
-
-	public Speed(float x, float y, float z, long tS) {
-
-		/*long curTime = System.currentTimeMillis();
-
-		if ((curTime - lastUpdate) > nbElements) {
-			long diffTime = (curTime - lastUpdate);
-			lastUpdate = curTime;
-			setSpeed(calculateSpeed(x, y, z, diffTime));
-		}*/
-		//Log.d("TESTING...", "TESITNG..." + now + " " + tS);
-		
-		
-		
-	}
-
-	private float calculateSpeed(float x, float y, float z, long diffTime) {
-		// float speed = Math.abs(x + y + z)/ diffTime * 10000;
-		Log.d("TESTING...", "TESITNG..." + x + " " + y + " " + z + " " + diffTime);
-		float speed = (float) (Math.sqrt((Math.pow(x, 2) + Math.pow(y, 2) + Math.pow(z, 2))) / diffTime * 100000000);
-		Log.d("SPEED...", "Speed..." + Math.sqrt((Math.pow(x, 2) + Math.pow(y, 2) + Math.pow(z, 2))) / nbElements * 1000000000 );
-		return speed;
-	}
+	private float speedBefore = 0;
+	private float speedAfter = 0;
+	private float distance = 0;
+	private float acceleration = 0;
+	private Distance dist;
+	private Energy energy;
+	private float expenditure = 0;
 	
-	public void avarageSpeed(float x, float y, float z, SensorEvent event){
-		long tS = event.timestamp;
+	public Speed() { 
+		setDist(new Distance());
+		setEnergy(new Energy());
+	}
+
+	/**
+	 * Function that calculates speed for a given acceleration.
+	 * @param x - first element of 3-dim vector
+	 * @param y - second element of 3-dim vector
+	 * @param z - third element of 3-dim vector
+	 * @param diffTime - time interval
+	 * @return speedAfter - actual speed of object
+	 */
+	public float calculateSpeed(float x, float y, float z, long diffTime) {
+
+		//Calculate acceleration as a magnitude of 3-dim vector.
+		acceleration = (float) Math.sqrt(x * x + y * y + z * z);
+
+		//Calculate given time.
+		float t = ((float) diffTime / 1000000000);
+
+		//Calculate given speed.
+		speedAfter = speedBefore + acceleration * t;
 		
-		if (now != 0) {
-			temp++;
-			Log.d("TESTING...", "TESITNG..." + "1");
-			if (temp == nbElements) {
-				time = tS - now;
-				setSpeed(calculateSpeed(x, y, z, time));
-				temp = 0;
-			}
-		}
-		// To set up now on the first event and do not change it while we do
-		// not have "nbElements" events
-		if (temp == 0) {
-			now = tS;
-		}
+		//Calculate given distance.
+		distance = dist.calulateDistance(speedBefore, t, acceleration);
+
+		setExpenditure(energy.calculateExpenditure(100, speedAfter));
+		
+		Log.d("SPEED...", "Speed..." + getAcceleration() + " " + getSpeedBefore() + " " + getSpeedAfter() + " " + t);
+
+		return speedAfter;
 	}
 
-	public float getSpeed() {
-		return Speed;
+	public float getDistance() {
+		return distance;
 	}
 
-	public void setSpeed(float speed) {
-		Speed = speed;
+	public void setDistance(float distance) {
+		this.distance = distance;
 	}
+
+	public float getSpeedBefore() {
+		return speedBefore;
+	}
+
+	public void setSpeedBefore(float speedBefore) {
+		this.speedBefore = speedBefore;
+	}
+
+	public float getSpeedAfter() {
+		return speedAfter;
+	}
+
+	public void setSpeedAfter(float speedAfter) {
+		this.speedAfter = speedAfter;
+	}
+
+	public float getAcceleration() {
+		return acceleration;
+	}
+
+	public void setAcceleration(float acceleration) {
+		this.acceleration = acceleration;
+	}
+
+	public Distance getDist() {
+		return dist;
+	}
+
+	public void setDist(Distance dist) {
+		this.dist = dist;
+	}
+
+	public Energy getEnergy() {
+		return energy;
+	}
+
+	public void setEnergy(Energy energy) {
+		this.energy = energy;
+	}
+
+	public float getExpenditure() {
+		return expenditure;
+	}
+
+	public void setExpenditure(float expenditure) {
+		this.expenditure = expenditure;
+	}
+
 }
