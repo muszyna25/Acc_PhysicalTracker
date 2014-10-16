@@ -2,6 +2,4 @@ Acc_PhysicalTracker
 ===================
 
 Android project - course Android Application Development. 
-
-- development of application for measuring physical activity performance
-- including calculation of average speed, calories expenditure etc.
+Application called Physical Activity Tracker enables to track human activity during some exercieses, like running or walking. It allows people to obeserve their efforts, in means of average speed, calories expenditure etc.
