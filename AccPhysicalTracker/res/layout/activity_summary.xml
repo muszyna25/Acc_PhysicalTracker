@@ -1,0 +1,57 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/relative"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_sky"
+    android:keepScreenOn="true" >
+
+    <Button
+        android:id="@+id/btn_fblogin1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/quit2"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="14dp"
+        android:src="@drawable/btn_login"
+        android:text="Log in with Facebook" />
+
+    <Button
+        android:id="@+id/logoutbtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="21dp"
+        android:text="Log out from Facebook" />
+
+    <Button
+        android:id="@+id/quit2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/btn_fb_post_to_wall1"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="17dp"
+        android:onClick="onClickQuit1"
+        android:text="Return to main menu" />
+
+    <Button
+        android:id="@+id/btn_fb_post_to_wall1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/logoutbtn"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="14dp"
+        android:text="Post on Facebook" />
+
+    <TextView
+        android:id="@+id/mean_speed"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="34dp"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="20dp" />
+
+</RelativeLayout>
