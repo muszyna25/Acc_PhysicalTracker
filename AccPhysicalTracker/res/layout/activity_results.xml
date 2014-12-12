@@ -13,7 +13,8 @@
         android:layout_marginTop="21dp"
         android:layout_gravity="center"
         android:text="@string/results"
-        android:textSize="50sp" />
+        android:textSize="50sp" 
+        android:textColor="#FFFF4444"/>
     
     <ListView
             android:id="@+id/listView1"

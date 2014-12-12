@@ -1,9 +1,16 @@
 package com.example.accphysicaltracker;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.hardware.Sensor;
@@ -11,6 +18,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.os.Handler;
 
 public class Calculation extends Activity implements OnClickListener,
 		SensorEventListener {
@@ -35,38 +43,68 @@ public class Calculation extends Activity implements OnClickListener,
 	private static final double nbElements = 100;
 
 	private SaveData data = new SaveData();
-	
+
 	Intent info;
+
+	ArrayList<Float> sp = new ArrayList<Float>();
+	ArrayList<Float> dist = new ArrayList<Float>();
+	ArrayList<Float> expen = new ArrayList<Float>();
+
+	private long start_game;
+	public long end_time;
+	private boolean stop = true;
+	private Handler handler = new Handler();
+	DBHelper mydb = new DBHelper(this);
+
+	float way = 0;
+
+	public float getWay() {
+		return way;
+	}
+
+	public void setWay(float way) {
+		this.way = way;
+	}
+
+	public float getCalories() {
+		return calories;
+	}
+
+	public void setCalories(float calories) {
+		this.calories = calories;
+	}
+
+	public float getAvg_velocity() {
+		return avg_velocity;
+	}
+
+	public void setAvg_velocity(float avg_velocity) {
+		this.avg_velocity = avg_velocity;
+	}
+
+	float calories = 0;
+	float avg_velocity = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_calculation);
-		
+
+		start_game = System.currentTimeMillis();
+		handler.postDelayed(thread, 1);
+
 		Button button2 = (Button) findViewById(R.id.quit1);
-	    button2.setOnClickListener(this);
-		
+		button2.setOnClickListener(this);
+
 		info = getIntent();
-
-		// Time from which application starts.
-		//String time_set = info.getStringExtra("timepicker");
-		//Log.d("Time from set...", "TIME SET FROM..." + time_set);
-
-		// Get bundle from intent.
-		//Bundle bundle = info.getExtras();
 
 		mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 
-		frequency_sampling = SensorManager.SENSOR_DELAY_FASTEST;
+		frequency_sampling = SensorManager.SENSOR_DELAY_GAME;
 
 		mSensorManager.registerListener(this,
 				mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
 				frequency_sampling);
-
-		// Get text views.
-		X_corr = (TextView) findViewById(R.id.xcoor); // Create X axis object.
-		Y_corr = (TextView) findViewById(R.id.ycoor); // Create Y axis object.
-		Z_corr = (TextView) findViewById(R.id.zcoor); // Create Z axis object.
 
 		Speed_value = (TextView) findViewById(R.id.real_speed);
 	}
@@ -89,15 +127,8 @@ public class Calculation extends Activity implements OnClickListener,
 			rawAcceleration[2] = rawAcceleration[2]
 					/ SensorManager.GRAVITY_EARTH;
 
-			// Display values using TextView.
-			X_corr.setText("X axis" + "\t\t" + rawAcceleration[0]);
-			Y_corr.setText("Y axis" + "\t\t" + rawAcceleration[1]);
-			Z_corr.setText("Z axis" + "\t\t" + rawAcceleration[2]);
-
 			tS = event.timestamp;
 			speed = new Speed();
-
-			//data = new SaveData();
 
 			if (now != 0) {
 				temp++;
@@ -117,8 +148,9 @@ public class Calculation extends Activity implements OnClickListener,
 					((TextView) findViewById(R.id.calories)).setText("Calories"
 							+ "\t\t" + speed.getExpenditure());
 
-					//data.saveData(speed.getSpeedAfter(), speed.getDistance(),
-					//		speed.getExpenditure());
+					sp.add(speed.getSpeedAfter());
+					dist.add(speed.getDistance());
+					expen.add(speed.getExpenditure());
 
 					temp = 0;
 				}
@@ -132,6 +164,26 @@ public class Calculation extends Activity implements OnClickListener,
 
 	}
 
+	public void calculateSummary(ArrayList<Float> sp1, ArrayList<Float> dist1,
+			ArrayList<Float> expen1) {
+
+		for (int i = 0; i < dist1.size(); i++) {
+			way = way + dist1.get(i);
+		}
+
+		for (int j = 0; j < expen1.size(); j++) {
+			calories = calories + expen1.get(j);
+		}
+
+		float velocity = 0;
+
+		for (int x = 0; x < sp1.size(); x++) {
+			velocity = velocity + sp1.get(x);
+		}
+
+		avg_velocity = velocity / sp1.size();
+	}
+
 	@Override
 	public void onAccuracyChanged(Sensor sensor, int accuracy) {
 		// TODO Auto-generated method stub
@@ -141,23 +193,63 @@ public class Calculation extends Activity implements OnClickListener,
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
-		
+
 		switch (v.getId()) {
-		//Stop in case of any problems. Return to previous activity.
+		// Stop in case of any problems. Return to previous activity.
 		case R.id.quit1:
-			Intent finish = new Intent(Calculation.this, MainActivity.class);
-			finish.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			startActivity(finish);
-			finish();
+			SimpleDateFormat sdf1 = new SimpleDateFormat("mm.ss.SSS");
+			end_time = System.currentTimeMillis();
+			Date r1 = new Date((end_time - start_game));
+
+			calculateSummary(sp, dist, expen);
+
+			DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+			Date date = new Date();
+
+			if (Float.toString(avg_velocity) == "NaN")
+				avg_velocity = 0;
+
+			if (Float.toString(way) == "NaN")
+				way = 0;
+
+			if (Float.toString(calories) == "NaN")
+				calories = 0;
+
+			String person_result = dateFormat.format(date) + "\n"
+					+ sdf1.format(r1) + " sec\n" + Float.toString(way) + " m\n"
+					+ Float.toString(avg_velocity) + " m/s\n"
+					+ Float.toString(calories) + " cal";
+
+			mydb.insertScore(person_result);
+
+			Log.d("Pushed", "Pushing.." + sdf1.format(r1));
+
+			handler.removeCallbacks(thread);
+
+			Intent inte = new Intent(Calculation.this, Summary.class);
+			inte.putExtra("timepicker", " ");
+
+			// Add data to a bundle.
+			Bundle extras2 = new Bundle();
+			extras2.putString("results1",
+					"Total time: " + sdf1.format(r1) + "\n" + "Average speed: "
+							+ Float.toString(getAvg_velocity()) + "\n"
+							+ "Distance: " + Float.toString(getWay()) + "\n"
+							+ "Expenditure: " + Float.toString(getCalories()));
+
+			// Add bundle to intent.
+			inte.putExtras(extras2);
+
+			startActivity(inte);
 			break;
 		}
 
 	}
-	
+
 	public void onClickQuit(View v) {
 		finish();
 	}
-	
+
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -169,7 +261,21 @@ public class Calculation extends Activity implements OnClickListener,
 	protected void onPause() {
 		super.onPause();
 		mSensorManager.unregisterListener(this);
-		//handler.removeCallbacks(thread);
 
 	}
+
+	private Runnable thread = new Runnable() {
+		@SuppressLint("SimpleDateFormat")
+		@Override
+		public void run() {
+			// TODO Auto-generated method stub
+			SimpleDateFormat sdf = new SimpleDateFormat("mm.ss.SSS");
+			long t = System.currentTimeMillis();
+			Date r = new Date((t - start_game));
+			TextView ch = (TextView) findViewById(R.id.timeLabel);
+			ch.setText(sdf.format(r));
+			handler.postDelayed(thread, 1);
+		}
+	};
+
 }

@@ -21,50 +21,44 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="25dp"
-        android:text="Duration in minutes"
+        android:text="Current Results"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="#FFFF4444" />
-    
+
     <TextView
-        android:id="@+id/xcoor"
+        android:id="@+id/real_dist"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
         android:layout_below="@+id/durationTime"
         android:textSize="20dp" />
 
     <TextView
-        android:id="@+id/ycoor"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/xcoor"
-        android:textSize="20dp" />
-
-    <TextView
-        android:id="@+id/zcoor"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/ycoor"
-        android:textSize="20dp" />
-    
-      <TextView
         android:id="@+id/real_speed"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/zcoor"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/real_dist"
+        android:layout_marginTop="33dp"
         android:textSize="20dp" />
-      
-      <TextView
-        android:id="@+id/real_dist"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/real_speed"
-        android:textSize="20dp" />
-      
-      <TextView
+
+    <TextView
         android:id="@+id/calories"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/real_dist"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/real_speed"
+        android:layout_marginTop="28dp"
         android:textSize="20dp" />
-    
+
+    <TextView
+        android:id="@+id/timeLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/quit1"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="78dp"
+        android:layout_weight="6"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
 </RelativeLayout>

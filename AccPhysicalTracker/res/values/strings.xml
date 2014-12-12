@@ -21,5 +21,7 @@
     <string name="radio_female">Female</string>
     <string name="title_activity_results">Results</string>
     <string name="results">Results</string>
+    <string name="facebook_app_id">1562342537314146</string>
+    <string name="title_activity_summary">Summary</string>
 
 </resources>
